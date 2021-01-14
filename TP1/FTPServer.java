@@ -4,8 +4,8 @@ import java.net.*;
 
 public class FTPServer {
 
-    public String login = "ftpclient-test";
-    public String passwd = "testacces";
+    public static String login = "ftpclient-test";
+    public static String passwd = "testacces";
     public static boolean serverOn = true;
 
     public static void main(String[] args) throws Exception
@@ -19,6 +19,7 @@ public class FTPServer {
         BufferedReader br;
         BufferedWriter wr;
         String message = "";
+        String response = "";
 
         try
         {
@@ -32,8 +33,32 @@ public class FTPServer {
                 message = "220 Service ready for new user.\r\n";
                 wr.write(message);
                 wr.newLine();
-                wr.close();
+                wr.flush();
                 
+                response = br.readLine();
+
+                //permet de récupérer juste le username (voir @FTPRequestAnnotation)
+                response = response.substring(5);
+
+
+                if(response.equals(login))
+                {
+                    System.out.println("OK");
+                    message = "331 User name okay, need password.\r\n";
+                    wr.write(message);
+                    wr.newLine();
+                    wr.flush();
+                }
+                else
+                {
+                    System.out.println("KO");
+                    message = "530 Not logged in.\r\n";
+                    wr.write(message);
+                    wr.newLine();
+                    wr.flush();
+                    serverOn = false;
+                }
+
             }
         }
         catch(Exception ex)
