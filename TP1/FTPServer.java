@@ -4,14 +4,13 @@ import java.net.*;
 
 public class FTPServer {
 
-    public static String login = "ftpclient-test";
-    public static String passwd = "testacces";
+    public static String login = "user";
+    public static String passwd = "pwd";
     public static boolean serverOn = true;
 
     public static void main(String[] args) throws Exception
     {
         int port = 8080;
-        //InetAddress address = "127.0.0.1";
         ServerSocket s = new ServerSocket(port);
         System.out.println("Server Socket Ready");
         Socket c = new Socket();
@@ -32,29 +31,41 @@ public class FTPServer {
                 
                 message = "220 Service ready for new user.\r\n";
                 wr.write(message);
-                wr.newLine();
                 wr.flush();
                 
                 response = br.readLine();
 
                 //permet de récupérer juste le username (voir @FTPRequestAnnotation)
-                response = response.substring(5);
-
+                response = (response.split(" ")[1]);
+                System.out.println(response);
 
                 if(response.equals(login))
                 {
-                    System.out.println("OK");
                     message = "331 User name okay, need password.\r\n";
                     wr.write(message);
-                    wr.newLine();
                     wr.flush();
+                    response = br.readLine();
+                    response = (response.split(" ")[1]);
+                    if(response.equals(passwd))
+                    {
+                        message = "230 User logged in, proceed. Logged out if appropriate.\r\n";    
+                        wr.write(message);
+                        wr.flush();   
+                        response = br.readLine();
+                        System.out.println(response);
+                    }
+                    else
+                    {
+                        message = "530 Not logged in.\r\n";
+                        wr.write(message);
+                        wr.flush();
+                        serverOn = false;
+                    }
                 }
                 else
                 {
-                    System.out.println("KO");
                     message = "530 Not logged in.\r\n";
                     wr.write(message);
-                    wr.newLine();
                     wr.flush();
                     serverOn = false;
                 }
