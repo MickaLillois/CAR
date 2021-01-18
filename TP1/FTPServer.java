@@ -8,6 +8,14 @@ public class FTPServer {
     public static String passwd = "pwd";
     public static boolean serverOn = true;
 
+
+    public static final String CODE_215 = "215 Remote system type is UNIX.\r\n";
+    public static final String CODE_220 = "220 Service ready for new user.\r\n";
+    public static final String CODE_221 = "221 Service closing control connection.\r\n";
+    public static final String CODE_230 = "230 User logged in.\r\n"; 
+    public static final String CODE_331 = "331 User name okay, need password.\r\n";
+    public static final String CODE_530 = "530 Not logged in.\r\n";
+
     public static void main(String[] args) throws Exception
     {
         int port = 8080;
@@ -25,48 +33,50 @@ public class FTPServer {
             while(serverOn)
             {
                 c = s.accept();
+                
                 System.out.println("Client connected");
+
                 br = new BufferedReader(new InputStreamReader(c.getInputStream()));
                 wr = new BufferedWriter(new OutputStreamWriter(c.getOutputStream()));
                 
-                message = "220 Service ready for new user.\r\n";
-                wr.write(message);
-                wr.flush();
-                
+                write(wr,CODE_220);
                 response = br.readLine();
-
                 //permet de récupérer juste le username (voir @FTPRequestAnnotation)
                 response = (response.split(" ")[1]);
-                System.out.println(response);
 
                 if(response.equals(login))
                 {
-                    message = "331 User name okay, need password.\r\n";
-                    wr.write(message);
-                    wr.flush();
+                    write(wr,CODE_331);
                     response = br.readLine();
                     response = (response.split(" ")[1]);
                     if(response.equals(passwd))
-                    {
-                        message = "230 User logged in, proceed. Logged out if appropriate.\r\n";    
-                        wr.write(message);
-                        wr.flush();   
-                        response = br.readLine();
-                        System.out.println(response);
+                    {    
+                        write(wr,CODE_230);     
+                        write(wr,CODE_215);   
+                        
+                        while(serverOn)
+                        {
+                            response = br.readLine();
+                            switch(response.split(" ")[0])
+                            {
+                                case "QUIT":
+                                    write(wr,CODE_221);
+                                    serverOn = false;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
                     }
                     else
                     {
-                        message = "530 Not logged in.\r\n";
-                        wr.write(message);
-                        wr.flush();
+                        write(wr,CODE_530);
                         serverOn = false;
                     }
                 }
                 else
                 {
-                    message = "530 Not logged in.\r\n";
-                    wr.write(message);
-                    wr.flush();
+                    write(wr,CODE_530);
                     serverOn = false;
                 }
 
@@ -81,5 +91,17 @@ public class FTPServer {
             System.out.println("Client disconnected");
             s.close();
         }
+    }
+
+    // à voir si utile (renvoyer un tableau du split par exemple)
+    public static String read(BufferedReader br) throws Exception
+    {
+        return br.readLine();
+    }
+
+    public static void write(BufferedWriter wr,String message) throws Exception
+    {
+        wr.write(message);
+        wr.flush();
     }
 }
