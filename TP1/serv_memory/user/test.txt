@@ -1,0 +1,8 @@
+test
+
+                            case "PORT":
+                                
+
+                                this.dsocket = new Socket(Inet4Address.getByName(ip), port);
+
+                                break;

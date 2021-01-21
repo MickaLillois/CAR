@@ -9,10 +9,9 @@ public class FTPServer {
 
     public static void main(String[] args) throws Exception
     {
-        int port = 8080;
-        ServerSocket s = new ServerSocket(port);
+        ServerSocket scontrol = new ServerSocket(8080);
         Date date = new Date();
-        System.out.println("[" + new Timestamp(date.getTime()) + "] INFO -" + " Server ON");
+        System.out.println("[" + new Timestamp(date.getTime()) + "] - INFO -" + " Server ON");
        
         Socket c = new Socket(); 
         int id = 1;
@@ -21,7 +20,7 @@ public class FTPServer {
         {
             while(true)
             {
-                c = s.accept();
+                c = scontrol.accept();
                 Runnable rThread = new MyRunnableThread(c,id);
                 Thread newThread = new Thread(rThread);
                 newThread.start();
@@ -46,23 +45,22 @@ public class FTPServer {
         wr.write(message);
         wr.flush();
     }
+
+    public static void processLIST()
+    {
+
+    }
+
 }
 
 class MyRunnableThread implements Runnable 
 {
-    Socket c = new Socket();
+    Socket c;
     int id = 0;
 
-
-    public static String login = "user";
-    public static String passwd = "pwd";
-    public static final String CODE_215 = "215 Remote system type is UNIX.\r\n";
-    public static final String CODE_220 = "220 Service ready for new user.\r\n";
-    public static final String CODE_221 = "221 Service closing control connection.\r\n";
-    public static final String CODE_230 = "230 User logged in.\r\n"; 
-    public static final String CODE_331 = "331 User name okay, need password.\r\n";
-    public static final String CODE_530 = "530 Not logged in.\r\n";
-
+    File directory;
+    int portPORT;
+    InetAddress ipPORT;    
 
     BufferedReader br;
     BufferedWriter wr;
@@ -77,42 +75,127 @@ class MyRunnableThread implements Runnable
 
     public void run() 
     {   
+        Socket sdata;
         Date date = new Date();
         try
         {   
-            System.out.println("[" + new Timestamp(date.getTime()) + "] INFO -" + " Client " + id + " connected");
+            System.out.println("[" + new Timestamp(date.getTime()) + "] - INFO -" + " Client " + id + " connected");
 
             br = new BufferedReader(new InputStreamReader(c.getInputStream()));
             wr = new BufferedWriter(new OutputStreamWriter(c.getOutputStream()));
 
-            FTPServer.write(wr,CODE_220);
+            FTPServer.write(wr,Config.CODE_220);
             response = br.readLine();
             //permet de récupérer juste le username (voir @FTPRequestAnnotation)
             response = (response.split(" ")[1]);
 
-            if(response.equals(login))
+            if(response.equals(Config.login))
             {
-                FTPServer.write(wr,CODE_331);
+                FTPServer.write(wr,Config.CODE_331);
+
+                //on récupère l'emplacement du répertoire du user
+                directory = new File("./serv_memory/" + response);
+                
                 response = br.readLine();
                 response = (response.split(" ")[1]);
-                if(response.equals(passwd))
+                if(response.equals(Config.passwd))
                 {    
-                    FTPServer.write(wr,CODE_230);     
-                    FTPServer.write(wr,CODE_215);   
-
-                    System.out.println("[" + new Timestamp(date.getTime()) + "] INFO -" + " Client " + id + " logged in");
+                    FTPServer.write(wr,Config.CODE_230);     
+                    FTPServer.write(wr,Config.CODE_215);   
+                    System.out.println("[" + new Timestamp(date.getTime()) + "] - INFO -" + " Client " + id + " logged in");
+                    
+                    //on vérifie si le dossier existe, sinon on le crée
+                    if (!directory.exists()) {
+                        if (directory.mkdir()) {
+                            System.out.println("Directory has been created!");
+                        } else {
+                            System.out.println("Failed to create directory!");
+                        }
+                    }
                     
                     while(!c.isClosed())
                     {
                         response = br.readLine();
+                        System.out.println(response);
                         switch(response.split(" ")[0])
                         {
                             case "QUIT":
-                                FTPServer.write(wr,CODE_221);
+                                FTPServer.write(wr,Config.CODE_221);
                                 c.close();
-
-                                System.out.println("[" + new Timestamp(date.getTime()) + "] INFO -" + " Client " + id + " quitted");
+                                System.out.println("[" + new Timestamp(date.getTime()) + "] - INFO -" + " Client " + id + " quitted");
                                 break;
+
+                            case "LIST":
+                                sdata = new Socket(); //sur le port du case PORT + l'IP
+                                String res = "";
+                                for(File in : directory.listFiles())
+                                {
+                                    if(in.isDirectory()){
+                                        res+=in.getName() +" -d \r\n";
+                                    }
+                                    else{
+                                        res+=in.getName() +" -f \r\n";
+                                    }
+                                }
+                                sdata.close();
+                                //à compléter
+                                break;
+
+                            case "RETR":
+                                sdata = new Socket(this.ipPORT,this.portPORT);
+                                String filename = response.split(" ")[1];
+                                File retrFile = new File(directory.getPath() + "/" + filename);
+                                System.out.println(retrFile.getPath());
+                                if (!retrFile.exists()) 
+                                {
+                                    FTPServer.write(wr,Config.CODE_404);    
+                                }
+                                else
+                                {
+                                    FTPServer.write(wr,Config.CODE_125);
+                                    
+
+                                    DataOutputStream dos = new DataOutputStream(sdata.getOutputStream());
+
+                                    FileInputStream fis = new FileInputStream(retrFile);
+                                    byte[] tmp = new byte[sdata.getSendBufferSize()];
+                                    int readb = fis.read(tmp);
+
+                                    while(readb>0){
+                                        dos.write(tmp,0,readb);
+                                        readb = fis.read(tmp);
+                                    }
+                                    fis.close();
+                                    dos.flush();
+
+                                    FTPServer.write(wr,Config.CODE_226);
+
+                                    dos.close();
+                                }
+                                sdata.close();
+                                break;
+
+                            case "PORT":
+                                String[] split = (response.split(" ")[1]).split(",");
+
+                                // 	Récupération de l'adress IP
+                                String ip = split[0];
+                                for(int i = 1 ; i <= 3 ; i++){
+                                    ip += "." + split[i];
+                                }
+
+                                // 	Lecture du port
+                                int port = Integer.parseInt(split[4]);
+                                port *= 256;
+                                port += Integer.parseInt(split[5]);
+
+                                this.portPORT = port;
+                                this.ipPORT = InetAddress.getByName(ip);
+                                //calcul du numéro de port (formule wikipedia) ainsi que l'IP
+                                //stocker le port pour le réutiliser
+                                FTPServer.write(wr,Config.CODE_200); //commande ok    
+                                break;
+
                             default:
                                 break;
                         }
@@ -120,23 +203,21 @@ class MyRunnableThread implements Runnable
                 }
                 else
                 {
-                    FTPServer.write(wr,CODE_530);
+                    FTPServer.write(wr,Config.CODE_530);
                     c.close();
-
-                    System.out.println("[" + new Timestamp(date.getTime()) + "] INFO -" + " Client " + id + " disconnected : bad password");
+                    System.out.println("[" + new Timestamp(date.getTime()) + "] - INFO -" + " Client " + id + " disconnected : bad password");
                 }
             }
             else
             {
-                FTPServer.write(wr,CODE_530);
+                FTPServer.write(wr,Config.CODE_530);
                 c.close();
-
-                System.out.println("[" + new Timestamp(date.getTime()) + "] INFO -" + " Client " + id + " disconnected : bad loggin");
+                System.out.println("[" + new Timestamp(date.getTime()) + "] - INFO -" + " Client " + id + " disconnected : bad loggin");
             }
         }
         catch(Exception ex)
         {
-            System.err.println("[" + new Timestamp(date.getTime()) + "] ERROR -" + " An exception occured");
+            System.err.println("[" + new Timestamp(date.getTime()) + "] - ERROR -" + " An exception occured");
             ex.printStackTrace();
         }
     }
