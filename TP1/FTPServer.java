@@ -1,6 +1,10 @@
 import java.io.*;
 import java.lang.*;
 import java.net.*;
+import java.nio.*;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.*;
 import java.util.Date;
 import java.sql.Timestamp;
 
@@ -75,7 +79,6 @@ class MyRunnableThread implements Runnable
 
     public void run() 
     {   
-        Socket sdata;
         Date date = new Date();
         try
         {   
@@ -122,27 +125,36 @@ class MyRunnableThread implements Runnable
                             case "QUIT":
                                 FTPServer.write(wr,Config.CODE_221);
                                 c.close();
-                                System.out.println("[" + new Timestamp(date.getTime()) + "] - INFO -" + " Client " + id + " quitted");
+                                System.out.println("[" + new Timestamp(date.getTime()) + "] - INFO -" + " Client " + id + " left");
                                 break;
 
                             case "LIST":
-                                sdata = new Socket(); //sur le port du case PORT + l'IP
+                                Socket sdataList = new Socket(this.ipPORT,this.portPORT); //sur le port du case PORT + l'IP
+                                FTPServer.write(wr,Config.CODE_125);
                                 String res = "";
                                 for(File in : directory.listFiles())
                                 {
-                                    if(in.isDirectory()){
-                                        res+=in.getName() +" -d \r\n";
+                                    Path path = Paths.get(in.getAbsolutePath());
+                                    BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
+                                    if(in.isDirectory())
+                                    {
+                                        res+= attr.creationTime() + " " + attr.size() + " " + in.getName() + " -d \r\n";
                                     }
-                                    else{
-                                        res+=in.getName() +" -f \r\n";
+                                    else
+                                    {
+                                        res+=attr.creationTime() + " " + attr.size() + " " + in.getName() + " -f \r\n";
                                     }
                                 }
-                                sdata.close();
-                                //à compléter
+                                DataOutputStream dosList = new DataOutputStream(sdataList.getOutputStream());
+                                dosList.writeBytes(res);
+                                dosList.flush();
+                                FTPServer.write(wr,Config.CODE_226);
+                                dosList.flush();
+                                sdataList.close();
                                 break;
 
                             case "RETR":
-                                sdata = new Socket(this.ipPORT,this.portPORT);
+                                Socket sdataRetr = new Socket(this.ipPORT,this.portPORT);
                                 String filename = response.split(" ")[1];
                                 File retrFile = new File(directory.getPath() + "/" + filename);
                                 System.out.println(retrFile.getPath());
@@ -153,26 +165,20 @@ class MyRunnableThread implements Runnable
                                 else
                                 {
                                     FTPServer.write(wr,Config.CODE_125);
-                                    
-
-                                    DataOutputStream dos = new DataOutputStream(sdata.getOutputStream());
-
+                                    DataOutputStream dosRetr = new DataOutputStream(sdataRetr.getOutputStream());
                                     FileInputStream fis = new FileInputStream(retrFile);
-                                    byte[] tmp = new byte[sdata.getSendBufferSize()];
+                                    byte[] tmp = new byte[sdataRetr.getSendBufferSize()];
                                     int readb = fis.read(tmp);
-
                                     while(readb>0){
-                                        dos.write(tmp,0,readb);
+                                        dosRetr.write(tmp,0,readb);
                                         readb = fis.read(tmp);
                                     }
                                     fis.close();
-                                    dos.flush();
-
+                                    dosRetr.flush();
                                     FTPServer.write(wr,Config.CODE_226);
-
-                                    dos.close();
+                                    dosRetr.close();
                                 }
-                                sdata.close();
+                                sdataRetr.close();
                                 break;
 
                             case "PORT":
