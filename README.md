@@ -13,5 +13,4 @@ Dépôt pour les TPs de CAR de Mickaël CARCELES et Rudy MATHIEU
 - [21/01/2021] Commande GET et DIR
 
 Prochaines étapes : 
-- coder les commandes GET/PUT/DIR
-- mettre en place les threads
+- Coder PUT et CD
