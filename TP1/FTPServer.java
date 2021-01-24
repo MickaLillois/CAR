@@ -181,6 +181,18 @@ class MyRunnableThread implements Runnable
                                 sdataRetr.close();
                                 break;
 
+                            case "STOR":
+                                Socket sdataRetr = new Socket(this.ipPORT,this.portPORT);
+                                
+                                sdataRetr.close();
+                                break;
+                            
+                            case "CWD": //à check
+                                Socket sdataRetr = new Socket(this.ipPORT,this.portPORT);
+                                
+                                sdataRetr.close();
+                                break;
+                                
                             case "PORT":
                                 String[] split = (response.split(" ")[1]).split(",");
 
@@ -197,8 +209,6 @@ class MyRunnableThread implements Runnable
 
                                 this.portPORT = port;
                                 this.ipPORT = InetAddress.getByName(ip);
-                                //calcul du numéro de port (formule wikipedia) ainsi que l'IP
-                                //stocker le port pour le réutiliser
                                 FTPServer.write(wr,Config.CODE_200); //commande ok    
                                 break;
 

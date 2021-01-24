@@ -9,6 +9,8 @@ Dépôt pour les TPs de CAR de Mickaël CARCELES et Rudy MATHIEU
 - [18/01/2021] Le command prompt retourne bien vers le client ftp
 - [18/01/2021] Purge du code / Remise en forme
 - [18/01/2021] Commande QUIT
+- [21/01/2021] Mise en place des threads
+- [21/01/2021] Commande GET et DIR
 
 Prochaines étapes : 
 - coder les commandes GET/PUT/DIR
