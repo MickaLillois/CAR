@@ -63,6 +63,8 @@ class MyRunnableThread implements Runnable
     int id = 0;
 
     File directory;
+    File root;
+
     int portPORT;
     InetAddress ipPORT;    
 
@@ -115,6 +117,7 @@ class MyRunnableThread implements Runnable
                             System.out.println("Failed to create directory!");
                         }
                     }
+                    root = directory;
                     
                     while(!c.isClosed())
                     {
@@ -202,11 +205,33 @@ class MyRunnableThread implements Runnable
                                 sdataStor.close();
                                 break;
                             
-                            case "CWD": //à check
-                                Socket sdataCd = new Socket(this.ipPORT,this.portPORT);
-                                
-                                sdataCd.close();
-                                break;
+                            case "CWD":
+                                //System.out.println(response);
+                                String targetPath = response.split(" ")[1];
+                                if(targetPath.equals(".."))
+                                {
+                                    //TEST DU CD .. : on se palce dans dirtest et on ressort dans user
+                                    //directory = new File("./serv_memory/user/dirtest"); 
+
+					                if(directory.equals(root) || directory.equals(root+"/") || (directory+"/").equals(root))
+                                    {
+                                        FTPServer.write(wr,Config.CODE_200); 
+                                    }
+                                    else
+                                    {
+                                        directory = new File(directory.getParent());
+                                    }
+                                }
+                                else
+                                {
+                                    File dossier = new File(directory+"/"+targetPath);
+                                    if(dossier.exists())
+                                    {
+                                        directory=new File(dossier.getAbsolutePath());
+                                    }
+                                }
+                                FTPServer.write(wr,Config.CODE_200); 
+                            break;
                                 
                             case "PORT":
                                 String[] split = (response.split(" ")[1]).split(",");
