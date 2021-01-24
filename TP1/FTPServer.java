@@ -119,7 +119,6 @@ class MyRunnableThread implements Runnable
                     while(!c.isClosed())
                     {
                         response = br.readLine();
-                        System.out.println(response);
                         switch(response.split(" ")[0])
                         {
                             case "QUIT":
@@ -155,8 +154,8 @@ class MyRunnableThread implements Runnable
 
                             case "RETR":
                                 Socket sdataRetr = new Socket(this.ipPORT,this.portPORT);
-                                String filename = response.split(" ")[1];
-                                File retrFile = new File(directory.getPath() + "/" + filename);
+                                String filenameRetr = response.split(" ")[1];
+                                File retrFile = new File(directory.getPath() + "/" + filenameRetr);
                                 System.out.println(retrFile.getPath());
                                 if (!retrFile.exists()) 
                                 {
@@ -182,15 +181,31 @@ class MyRunnableThread implements Runnable
                                 break;
 
                             case "STOR":
-                                Socket sdataRetr = new Socket(this.ipPORT,this.portPORT);
+                                Socket sdataStor = new Socket(this.ipPORT,this.portPORT);
+                                File f = new File(response.split(" ")[1]);
+                                String filenameStor = f.getName();
+                                FTPServer.write(wr,Config.CODE_125);
+                                DataInputStream disStor = new DataInputStream(sdataStor.getInputStream());
+                                FileOutputStream fosStor = new FileOutputStream(this.directory + "/" + filenameStor);
                                 
-                                sdataRetr.close();
+                                byte[] tmp = new byte[sdataStor.getReceiveBufferSize()];
+                                int readbStor = disStor.read(tmp);
+                                while(readbStor>0){
+                                    fosStor.write(tmp,0,readbStor);
+                                    readbStor = disStor.read(tmp);
+                                }
+
+                                fosStor.flush();
+                                fosStor.close();
+                                FTPServer.write(wr,Config.CODE_226);
+                                disStor.close();
+                                sdataStor.close();
                                 break;
                             
                             case "CWD": //à check
-                                Socket sdataRetr = new Socket(this.ipPORT,this.portPORT);
+                                Socket sdataCd = new Socket(this.ipPORT,this.portPORT);
                                 
-                                sdataRetr.close();
+                                sdataCd.close();
                                 break;
                                 
                             case "PORT":
