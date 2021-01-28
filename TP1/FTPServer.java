@@ -49,12 +49,6 @@ public class FTPServer {
         wr.write(message);
         wr.flush();
     }
-
-    public static void processLIST()
-    {
-
-    }
-
 }
 
 class MyRunnableThread implements Runnable 
