@@ -1,5 +1,4 @@
-# CAR
-Dépôt pour les TPs de CAR de Mickaël CARCELES et Rudy MATHIEU
+# TP1
 
 ### Avancée
 - **[14/01/2021]** Connexion initiale
