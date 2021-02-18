@@ -4,7 +4,7 @@ import java.net.*;
 
 public class Config {
 
-    public static String login = "user";
+    public static String login = "micka";
     public static String passwd = "pwd";
     public static final String CODE_125 = "125 Data connection already open; transfer starting.\r\n";
     public static final String CODE_150 = "150 File status okay; about to open data connection.\r\n";
