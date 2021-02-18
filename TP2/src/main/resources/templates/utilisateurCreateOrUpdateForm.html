@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Créer / Modifier un utilisateur</title>
+</head>
+<body>
+<h2>Utilisateur</h2>
+    <form th:object="${utilisateur}" id="add-owner-form" method="post">
+        <div>
+            <input th:replace="~{fragments/inputField :: input ('Adresse mail', 'addr_mail', 'text')}" />
+            <input th:replace="~{fragments/inputField :: input ('Nom', 'nom', 'text')}" />
+            <input th:replace="~{fragments/inputField :: input ('Prenom', 'prenom', 'text')}" />
+            <input th:replace="~{fragments/inputField :: input ('Pseudonyme', 'pseudo', 'text')}" />
+            <input th:replace="~{fragments/inputField :: input ('Mot de passe', 'mot_de_passe', 'text')}" />
+        </div>
+        <!--<div>
+            <div>
+                <button th:with="text=${owner['new']} ? 'Add Owner' : 'Update Owner'" type="submit" th:text="${text}">
+                        Ajouter Utilisateur
+                </button>
+            </div>
+        </div>-->
+    </form>
+</body>
+</html>

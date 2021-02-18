@@ -7,5 +7,7 @@
 <body>
 <span>Bienvenue sur la page des utilisateurs</span>
 <div th:insert="~{fragments/nav :: navbar}"></div>
+<a th:href="@{/utilisateurs/liste}">Liste des utilisateurs</a>
+<a th:href="@{/utilisateurs/nouveau}">Ajouter un utilisateur</a>
 </body>
 </html>

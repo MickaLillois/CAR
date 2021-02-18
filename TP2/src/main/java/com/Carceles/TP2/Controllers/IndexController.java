@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class utilisateurController {
-    @GetMapping("/utilisateurs")
-    public String index() {return "utilisateurs";}
+public class IndexController {
+    @GetMapping("/")
+    public String index() {return "index";}
 }
