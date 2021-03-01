@@ -1,4 +1,4 @@
-package com.Carceles.TP2.Controllers;
+package com.Carceles.TP2.Repositories;
 
 import com.Carceles.TP2.Models.Utilisateur;
 import org.springframework.data.repository.CrudRepository;

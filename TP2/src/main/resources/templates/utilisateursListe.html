@@ -6,5 +6,31 @@
 </head>
 <body>
 <span>Liste des utilisateurs</span>
+<table>
+    <thead>
+    <tr>
+        <th> Mail </th>
+        <th> Nom </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${listeUtilisateursHTML.empty}">
+        <td colspan="2"> Pas de user dispo t'as vu </td>
+    </tr>
+    <tr th:each="utilisateur : ${listeUtilisateursHTML}">
+        <td><span th:text="${utilisateur.addr_mail}"> Mail </span></td>
+        <td><span th:text="${utilisateur.nom}"> Nom </span></td>
+        <!--<td><form action="/ajoutPanier" method="post">
+            <input id="prodId" name="id_produit" type="hidden" th:value="${produit.id}">
+            <button name="foo" value="upvote">Upvote</button>
+        </form></td>-->
+    </tr>
+
+
+
+    </tbody>
+
+
+</table>
 </body>
 </html>

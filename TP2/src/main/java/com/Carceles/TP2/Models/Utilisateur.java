@@ -20,12 +20,25 @@ public class Utilisateur {
     @Column(name="PWD_UTI")
     private String mot_de_passe;
 
+    public Utilisateur(){ }
+
     public Utilisateur(String addr_mail, String nom, String prenom, String pseudo, String mot_de_passe) {
         this.addr_mail = addr_mail;
         this.nom = nom;
         this.prenom = prenom;
         this.pseudo = pseudo;
         this.mot_de_passe = mot_de_passe;
+    }
+
+    @Override
+    public String toString() {
+        return "Utilisateur{" +
+                "addr_mail='" + addr_mail + '\'' +
+                ", nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", pseudo='" + pseudo + '\'' +
+                ", mot_de_passe='" + mot_de_passe + '\'' +
+                '}';
     }
 
     //Getters and Setters
