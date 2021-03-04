@@ -66,4 +66,10 @@ public class Utilisateur {
     public void setMot_de_passe(String mot_de_passe) {
         this.mot_de_passe = mot_de_passe;
     }
+    public String getPseudo() {
+        return pseudo;
+    }
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
+    }
 }

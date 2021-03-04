@@ -7,8 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.ModelAndView;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import java.util.ArrayList;
 
 @Controller
@@ -18,16 +17,19 @@ public class UtilisateurController {
     UtilisateurRepository utilisateurRepository;
 
     @GetMapping("/utilisateurs")
-    public String index() {return "utilisateurs";}
+    public String mainUtilisateur() {return "utilisateurs";}
 
     @GetMapping("/utilisateurs/nouveau")
     public String creerUtilisateur() {return "utilisateurCreateOrUpdateForm";}
 
     @PostMapping("/utilisateurs/processNouveau")
-    public String processCreerUtilisateur() {
-        //récupérer éléments du form puis les mettre dans le constructeur
-        Utilisateur random = new Utilisateur("non@gmail.com","non","non","non","non");
-        this.utilisateurRepository.save(random);
+    public String processCreerUtilisateur(@RequestParam("mail_addr") String mail_addr,
+                                          @RequestParam("nom") String nom,
+                                          @RequestParam("prenom") String prenom,
+                                          @RequestParam("pseudo") String pseudo,
+                                          @RequestParam("password") String password) {
+        Utilisateur newUtilisateur = new Utilisateur(mail_addr,nom,prenom,pseudo,password);
+        this.utilisateurRepository.save(newUtilisateur);
         return "redirect:/utilisateurs/liste";
     }
 
@@ -37,6 +39,4 @@ public class UtilisateurController {
         model.addAttribute("listeUtilisateursHTML",listeUtilisateurs);
         return "utilisateursListe";
     }
-
-    //
 }

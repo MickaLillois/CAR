@@ -11,6 +11,8 @@
     <tr>
         <th> Mail </th>
         <th> Nom </th>
+        <th> Prénom </th>
+        <th> Pseudonyme </th>
     </tr>
     </thead>
     <tbody>
@@ -20,10 +22,8 @@
     <tr th:each="utilisateur : ${listeUtilisateursHTML}">
         <td><span th:text="${utilisateur.addr_mail}"> Mail </span></td>
         <td><span th:text="${utilisateur.nom}"> Nom </span></td>
-        <!--<td><form action="/ajoutPanier" method="post">
-            <input id="prodId" name="id_produit" type="hidden" th:value="${produit.id}">
-            <button name="foo" value="upvote">Upvote</button>
-        </form></td>-->
+        <td><span th:text="${utilisateur.prenom}"> Prénom </span></td>
+        <td><span th:text="${utilisateur.pseudo}"> Pseudo </span></td>
     </tr>
 
 

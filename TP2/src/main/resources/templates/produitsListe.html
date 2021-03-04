@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des produits</title>
+</head>
+<body>
+<span>Liste des produits</span>
+<table border="1" cellpadding="2" cellspacing="0">
+    <thead>
+    <tr>
+        <th> Id </th>
+        <th> Nom </th>
+        <th> Description </th>
+        <th> Prix </th>
+        <th> Quantité Stock </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${listeProduitsHTML.empty}">
+        <td colspan="2"> Pas de produits dispo t'as vu </td>
+    </tr>
+    <tr th:each="produit : ${listeProduitsHTML}">
+        <td><span th:text="${produit.id}"> Id </span></td>
+        <td><span th:text="${produit.nom}"> Nom </span></td>
+        <td><span th:text="${produit.desc}"> Description </span></td>
+        <td><span th:text="${produit.prix}"> Prix </span></td>
+        <td><span th:text="${produit.qte_stock}"> Quantité Stock </span></td>
+    </tr>
+
+
+
+    </tbody>
+
+
+</table>
+</body>
+</html>
