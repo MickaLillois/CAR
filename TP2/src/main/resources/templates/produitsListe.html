@@ -17,15 +17,15 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:if="${listeProduitsHTML.empty}">
+    <tr th:if="${listeProduits.empty}">
         <td colspan="2"> Pas de produits dispo t'as vu </td>
     </tr>
-    <tr th:each="produit : ${listeProduitsHTML}">
+    <tr th:each="produit : ${listeProduits}">
         <td><span th:text="${produit.id}"> Id </span></td>
         <td><span th:text="${produit.nom}"> Nom </span></td>
         <td><span th:text="${produit.desc}"> Description </span></td>
         <td><span th:text="${produit.prix}"> Prix </span></td>
-        <td><span th:text="${produit.qte_stock}"> Quantité Stock </span></td>
+        <td><span th:text="${produit.qteStock}"> Quantité Stock </span></td>
     </tr>
 
 

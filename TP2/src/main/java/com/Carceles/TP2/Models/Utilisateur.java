@@ -1,53 +1,64 @@
 package com.Carceles.TP2.Models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name="UTILISATEUR")
+@Table
 public class Utilisateur {
     @Id
-    @Column(name="MAIL_UTI")
-    private String addr_mail;
-    @Column(name="NOM_UTI")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private String mail;
     private String nom;
-    @Column(name="PRENOM_UTI")
     private String prenom;
-    @Column(name="PSEUDO_UTI")
     private String pseudo;
-    @Column(name="PWD_UTI")
-    private String mot_de_passe;
+    private String mdp;
 
     public Utilisateur(){ }
 
-    public Utilisateur(String addr_mail, String nom, String prenom, String pseudo, String mot_de_passe) {
-        this.addr_mail = addr_mail;
+    public Utilisateur(String mail, String nom, String prenom, String pseudo, String mdp) {
+        this.mail = mail;
         this.nom = nom;
         this.prenom = prenom;
         this.pseudo = pseudo;
-        this.mot_de_passe = mot_de_passe;
+        this.mdp = mdp;
     }
 
     @Override
     public String toString() {
         return "Utilisateur{" +
-                "addr_mail='" + addr_mail + '\'' +
+                "id=" + id +
+                ", mail='" + mail + '\'' +
                 ", nom='" + nom + '\'' +
                 ", prenom='" + prenom + '\'' +
                 ", pseudo='" + pseudo + '\'' +
-                ", mot_de_passe='" + mot_de_passe + '\'' +
+                ", mdp='" + mdp + '\'' +
                 '}';
     }
 
     //Getters and Setters
-    public String getAddr_mail() {
-        return addr_mail;
+
+    public int getId() {
+        return id;
     }
-    public void setAddr_mail(String addr_mail) {
-        this.addr_mail = addr_mail;
+    public void setId(int id) {
+        this.id = id;
     }
+    public String getMail() {
+        return mail;
+    }
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public String getMdp() {
+        return mdp;
+    }
+
+    public void setMdp(String mdp) {
+        this.mdp = mdp;
+    }
+
     public String getNom() {
         return nom;
     }
@@ -60,16 +71,11 @@ public class Utilisateur {
     public void setPrenom(String prenom) {
         this.prenom = prenom;
     }
-    public String getMot_de_passe() {
-        return mot_de_passe;
-    }
-    public void setMot_de_passe(String mot_de_passe) {
-        this.mot_de_passe = mot_de_passe;
-    }
     public String getPseudo() {
         return pseudo;
     }
     public void setPseudo(String pseudo) {
         this.pseudo = pseudo;
     }
+
 }
