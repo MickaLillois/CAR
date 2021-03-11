@@ -20,40 +20,47 @@
    <% } %>
 </header>
 <body>
-<h2>Connexion</h2>
-<form action="/checkConnexion" method="POST">
+<h2>Créer un compte</h2>
+<form action="/checkInscription" method="POST">
         <div>
             <label for="mail">Votre adresse mail : </label>
             <input type="text" id="mail" name="mail">
         </div>
-        <br />
+        <div>
+            <label for="nom">Votre nom : </label>
+            <input type="text" id="nom" name="nom">
+        </div>
+        <div>
+            <label for="prenom">Votre prénom : </label>
+            <input type="text" id="prenom" name="prenom">
+        </div>
+        <div>
+            <label for="pseudo">Votre pseudo : </label>
+            <input type="text" id="pseudo" name="pseudo">
+        </div>
         <div>
             <label for="mdpForm">Votre mot de passe : </label>
             <input type="password" id="mdpForm" name="mdpForm">
         </div>
         <br />
         <div>
-            <a href="/inscription">Vous n'avez pas de compte ?</a>
+            <a href="/connexion">Vous avez déjà un compte ?</a>
         </div>
         <br />
         <div class="button">
-            <button type="submit">Connexion</button>
+            <button type="submit">Créer un compte</button>
         </div>
 </form>
 <br />
         <%
             if(request.getParameter("vide") != null){
                 out.println("<div role='alert'>" +
-                                "Veuillez renseigner votre <strong>mot de passe ainsi que votre email</strong>." +
+                                "Tous les champs sont <strong>obligatoires</strong>." +
                              "</div>");
             }else if(request.getParameter("existe") != null){
                 out.println("<div role='alert'>" +
-                             "<strong>Aucun compte</strong> n'utilise cette adresse email." +
+                             "<strong>Ce mail est déjà</strong> utilisé pour un autre compte." +
                           "</div>");
-            }else if(request.getParameter("mdp") != null){
-                 out.println("<div role='alert'>" +
-                                "Le mot de passe saisi est <strong>incorrect</strong>." +
-                              "</div>");
             }
         %>
 </body>

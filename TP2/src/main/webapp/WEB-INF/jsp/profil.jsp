@@ -26,6 +26,7 @@
 <% Utilisateur utilisateur = (Utilisateur) request.getAttribute("utilisateur"); %>
 <h2>Profil</h2>
         <div>
+            <h5>Mail : <% out.println(utilisateur.getMail()); %></h5>
             <h5>Prénom : <% out.println(utilisateur.getPrenom()); %></h5>
             <h5>Nom : <% out.println(utilisateur.getNom()); %></h5>
             <h5>Pseudo : <% out.println(utilisateur.getPseudo()); %></h5>
@@ -36,10 +37,7 @@
             <%
                 List<Commande> listeCommande = (List<Commande>) request.getAttribute("listeCommande");
                 for(Commande c : listeCommande){
-                    out.println("<p>" + c.getId() + "</p>" +
-                                "<p>" + c.getIdUtilisateur() + "</p>" +
-                                "<p>" + c.getPrix() + "</p>" +
-                                "<p>" + c.getDate() + "</p>");
+                    out.println("<p>" + c + "</p>");
                 }
 
             %>

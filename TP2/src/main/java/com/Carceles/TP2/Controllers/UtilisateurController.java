@@ -35,6 +35,9 @@ public class UtilisateurController {
     @RequestMapping(path = "/deconnexion")
     public String deconnexion(){ return "deconnexion";}
 
+    @RequestMapping(path = "/inscription")
+    public String inscription(){ return "inscription";}
+
     @RequestMapping(path = "/profil")
     public String profil(HttpSession session, Model model){
         Utilisateur utilisateur = utilisateurRepo.findById((Integer) session.getAttribute("idUtilisateur")).get();
@@ -73,7 +76,30 @@ public class UtilisateurController {
         return "profil";
     }
 
-
+    @RequestMapping(path = "/checkInscription")
+    public String checkInscription(Model model,
+                                   HttpSession session,
+                                   @RequestParam(required = false) String mail,
+                                   @RequestParam(required = false) String nom,
+                                   @RequestParam(required = false) String prenom,
+                                   @RequestParam(required = false) String pseudo,
+                                   @RequestParam(required = false) String mdpForm){
+        if (mail.equals("") || nom.equals("") || prenom.equals("") || pseudo.equals("") || mdpForm.equals("")){
+            return "redirect:inscription?vide=true";
+        }
+        else if(utilisateurRepo.findByMail(mail).size() != 0){
+            return "redirect:inscription?existe=true";
+        }
+        else{
+            Utilisateur utilisateur = new Utilisateur(mail,nom,prenom,pseudo,mdpForm);
+            this.utilisateurRepo.save(utilisateur);
+            session.setAttribute("idUtilisateur", utilisateur.getId());
+            List<Commande> listeCommande = commandeRepo.findByIdUtilisateur(utilisateur.getId());
+            model.addAttribute("utilisateur", utilisateur);  //model ici = request dans jsp
+            model.addAttribute("listeCommande", listeCommande);
+            return "profil";
+        }
+    }
 
 
 

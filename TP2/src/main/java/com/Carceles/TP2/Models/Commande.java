@@ -26,12 +26,8 @@ public class Commande {
 
     @Override
     public String toString() {
-        return "Commande{" +
-                "id=" + id +
-                ", idUtilisateur=" + idUtilisateur +
-                ", prix=" + prix +
-                ", date=" + date +
-                '}';
+        return "IdCommande : " + id + ", PrixTotal : " + prix +
+                ", DateCommande : " + date;
     }
 
     public Integer getId() {

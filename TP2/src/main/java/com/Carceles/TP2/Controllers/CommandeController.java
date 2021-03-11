@@ -35,19 +35,34 @@ public class CommandeController {
             return "connexion";
         }
         else{
-            Integer idUtilisateur = (Integer)session.getAttribute("idUtilisateur");
             HashMap<Integer, Integer> panier = (HashMap<Integer, Integer>) session.getAttribute("panier");
-            Float total = 0.00F;
-            for(int id : panier.keySet()){
-                Produit leProd = produitRepo.findById(id).get();
-                Integer qte = panier.get(id);
-                total += qte * leProd.getPrix();
+            System.out.println("ici 1");
+            if(panier.size() == 0){
+                System.out.println("ici 2");
+                return "redirect:panier?vide=true";
             }
-            Commande nouvCommande = new Commande(idUtilisateur, total, LocalDate.now());
-            this.commandeRepo.save(nouvCommande);
-            Utilisateur utilisateur = utilisateurRepo.findById((Integer) session.getAttribute("idUtilisateur")).get();
-            model.addAttribute("utilisateur", utilisateur);
-            return "redirect:profil";
+            else {
+                Integer idUtilisateur = (Integer) session.getAttribute("idUtilisateur");
+                Float total = 0.00F;
+                for (int id : panier.keySet()) {
+                    Produit leProd = produitRepo.findById(id).get();
+                    Integer qte = panier.get(id);
+                    total += qte * leProd.getPrix();
+                }
+                Commande nouvCommande = new Commande(idUtilisateur, total, LocalDate.now());
+                this.commandeRepo.save(nouvCommande);
+
+
+
+                //////////////////////////
+                // ajout lignes commande
+                //////////////////////////
+
+                Utilisateur utilisateur = utilisateurRepo.findById((Integer) session.getAttribute("idUtilisateur")).get();
+                model.addAttribute("utilisateur", utilisateur);
+                session.setAttribute("panier",null);
+                return "redirect:profil";
+            }
         }
     }
 

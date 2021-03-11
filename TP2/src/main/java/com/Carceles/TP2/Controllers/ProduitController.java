@@ -49,9 +49,20 @@ public class ProduitController {
         if(id != null){
             Produit leProduit = (Produit) repository.findById(Integer.parseInt(id)).get();
             HashMap<Integer, Integer> panier = (HashMap<Integer, Integer>) session.getAttribute("panier");
-            if(panier.containsKey(Integer.parseInt(id))){
-                panier.replace(Integer.parseInt(id), (panier.get(Integer.parseInt(id)) + 1));
-            }else{
+            if(panier.containsKey(Integer.parseInt(id)))
+            {
+                Integer qte = panier.get(Integer.parseInt(id));
+                if(leProduit.getQteStock() - qte <= 0)
+                {
+                    return "redirect:panier?dispo=false";
+                }
+                else
+                {
+                    panier.replace(Integer.parseInt(id), (panier.get(Integer.parseInt(id)) + 1));
+                }
+            }
+            else
+            {
                 panier.put(Integer.parseInt(id), 1);
             }
             session.setAttribute("panier",panier);

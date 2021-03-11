@@ -43,8 +43,20 @@
                 %>
                 <p>Total TTC : <% out.println(String.format("%.2f", total)); %>€</p>
         </div>
-        <br /><br /><br />
+        <br /><br />
         <a href="/commander"><button>Enregistrer la commande</button></a>
+        <br /><br />
+         <%
+            if(request.getParameter("vide") != null){
+                  out.println("<div role='alert'>" +
+                                "Impossible d'enregistrer la commande : votre panier est <strong>vide</strong>." +
+                              "</div>");
+            }else if(request.getParameter("dispo") != null){
+                  out.println("<div role='alert'>" +
+                                "Impossible d'ajouter ce produit au panier : le stock n'est pas <strong>suffisant</strong>." +
+                              "</div>");
+            }
+         %>
 </form>
 </body>
 </html>

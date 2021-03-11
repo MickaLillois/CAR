@@ -43,7 +43,7 @@
                                          "<td>" + listeProduits.get(i).getId() +"</td>" +
                                          "<td>" + listeProduits.get(i).getNom() +"</td>" +
                                          "<td>" + listeProduits.get(i).getDesc() + "</td>" +
-                                         "<td>" + listeProduits.get(i).getPrix() + " €</td>" +
+                                         "<td>" + String.format("%.2f", listeProduits.get(i).getPrix()) + " €</td>" +
                                          "<td>" + listeProduits.get(i).getQteStock() + "</td>" +
                                          "<td><a href=\"/panier?id=" + listeProduits.get(i).getId() + "\"><button>Ajouter au panier</button></a></td>" +
                                      "</tr>");
