@@ -26,21 +26,40 @@
 <body>
 <h2>Le panier</h2>
         <div>
-                <%
-                     Float total = 0.00F;
-                     ProduitRepository repo = (ProduitRepository) request.getAttribute("repository");
-                     HashMap<Integer, Integer> panier = (HashMap<Integer, Integer>) session.getAttribute("panier");
+            <%
+                 HashMap<Integer, Integer> panier = (HashMap<Integer, Integer>) session.getAttribute("panier");
+                 Float total = 0.00F;
+                 if(panier.size() == 0){
+                    out.println("<p>Votre panier est vide.</p>");
+                 }
+                 else{
 
-                     for(int id : panier.keySet()){
+                    out.println("<table border='1' cellpadding='2' cellspacing='0'>" +
+                                                 "<thead>" +
+                                                     "<tr>" +
+                                                         "<th> Nom produit </th>" +
+                                                         "<th> Quantité </th>" +
+                                                         "<th> Prix unitaire </th>" +
+                                                         "<th></th>" +
+                                                     "</tr>" +
+                                                 "</thead>" +
+                                                 "<tbody>");
+                    ProduitRepository repo = (ProduitRepository) request.getAttribute("repository");
+                    for(int id : panier.keySet()){
                         Produit leProd = repo.findById(id).get();
                         Integer qte = panier.get(id);
                         total += qte * leProd.getPrix();
-                        out.println("<div>" +
-                                    "<p>" + leProd.getNom() + " : " + qte + "</p>" +
-                                    "<a href=\"/retirer?id=" + leProd.getId() + "\"><button>Retirer du panier</button></a>"  +
-                                    "</div>");
-                     }
-                %>
+                        out.println("<tr>" +
+                                    "<td>" + leProd.getNom() + "</td>" +
+                                    "<td>" + qte + "</td>" +
+                                    "<td>" + String.format("%.2f",leProd.getPrix()) + "€</td>" +
+                                    "<td>" + "<a href=\"/retirer?id=" + leProd.getId() + "\"><button>Retirer du panier</button></a>" + "</td>" +
+                                    "</tr>");
+                    }
+                    out.println("</tbody>" + "</table>");
+                 }
+            %>
+            <br />
                 <p>Total TTC : <% out.println(String.format("%.2f", total)); %>€</p>
         </div>
         <br /><br />

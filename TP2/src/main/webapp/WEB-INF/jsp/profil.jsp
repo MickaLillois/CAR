@@ -34,18 +34,22 @@
         <br /><br /><br />
         <div>
             <h3> Votre historique de commande</h3>
-                <table border="1" cellpadding="2" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th> Id </th>
-                            <th> Date Commande </th>
-                            <th> Prix total TTC </th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <%
-                        List<Commande> listeCommande = (List<Commande>) request.getAttribute("listeCommande");
+                <%
+                    List<Commande> listeCommande = (List<Commande>) request.getAttribute("listeCommande");
+                    if(listeCommande.size() == 0){
+                        out.println("<p>Vous n'avez jamais commandé.</p>");
+                    }
+                    else{
+                        out.println("<table border='1' cellpadding='2' cellspacing='0'>" +
+                                                        "<thead>" +
+                                                            "<tr>" +
+                                                                "<th> Id </th>" +
+                                                                "<th> Date Commande </th>" +
+                                                                "<th> Prix total TTC </th>" +
+                                                                "<th></th>" +
+                                                            "</tr>" +
+                                                        "</thead>" +
+                                                        "<tbody>");
                         for(Commande c : listeCommande){
                             out.println("<tr>" +
                                         "<td>" + c.getId() + "</td>" +
@@ -54,8 +58,9 @@
                                         "<td>" + "<a href='/detail?id=" + c.getId() + "'><button>Détail de la commande</button></a>" + "</td>" +
                                         "</tr>");
                         }
+                        out.println("</tbody>" + "</table>");
+                    }
                     %>
-                    </tbody>
         </div>
 </form>
 </body>
