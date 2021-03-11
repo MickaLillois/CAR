@@ -25,13 +25,10 @@ public class Produit {
 
     @Override
     public String toString() {
-        return "Produit{" +
-                "id=" + id +
-                ", nom='" + nom + '\'' +
-                ", desc='" + desc + '\'' +
-                ", prix=" + prix +
-                ", qteStock=" + qteStock +
-                '}';
+        return  "NomProd : " + nom +
+                " DescriptionProd : " + desc +
+                " PrixUnitaire : " + prix +
+                " QteStock=" + qteStock;
     }
 
     //Getters and setters

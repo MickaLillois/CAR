@@ -100,41 +100,4 @@ public class UtilisateurController {
             return "profil";
         }
     }
-
-
-
-
-
-
-
-
-
-    /*@GetMapping("/utilisateurs/nouveau")
-    public String creerUtilisateur() {return "utilisateurCreateOrUpdateForm";}*/
-
-    /*@PostMapping("/utilisateurs/processNouveau")
-    public String processCreerUtilisateur(@RequestParam("mail_addr") String mail_addr,
-                                          @RequestParam("nom") String nom,
-                                          @RequestParam("prenom") String prenom,
-                                          @RequestParam("pseudo") String pseudo,
-                                          @RequestParam("password") String password) {
-        Utilisateur newUtilisateur = new Utilisateur(mail_addr,nom,prenom,pseudo,password);
-        this.utilisateurRepository.save(newUtilisateur);
-        return "redirect:/utilisateurs/liste";
-    }*/
-
-    /*@PostMapping("/utilisateurs/verifConnexion")
-    public String checkConnexion(@RequestParam("mail_addr") String mail_addr, @RequestParam("password") String password){
-        if(this.utilisateurRepository.getMailId(mail_addr) != null){
-
-        }
-        return ""; //remplir le redirect
-    }*/
-
-    /*@GetMapping("/utilisateurs/liste")
-    public String listerUtilisateurs(Model model) {
-        ArrayList<Utilisateur> listeUtilisateurs = (ArrayList<Utilisateur>) this.utilisateurRepository.findAll();
-        model.addAttribute("listeUtilisateursHTML",listeUtilisateurs);
-        return "utilisateursListe";
-    }*/
 }

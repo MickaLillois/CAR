@@ -24,23 +24,38 @@
 </header>
 <body>
 <% Utilisateur utilisateur = (Utilisateur) request.getAttribute("utilisateur"); %>
-<h2>Profil</h2>
+<h2>Bienvenue <% out.println(utilisateur.getPrenom() + " " + utilisateur.getNom()); %></h2>
         <div>
-            <h5>Mail : <% out.println(utilisateur.getMail()); %></h5>
-            <h5>Prénom : <% out.println(utilisateur.getPrenom()); %></h5>
-            <h5>Nom : <% out.println(utilisateur.getNom()); %></h5>
-            <h5>Pseudo : <% out.println(utilisateur.getPseudo()); %></h5>
+            <p><strong>Mail</strong> : <% out.println(utilisateur.getMail()); %></p>
+            <p><strong>Prénom</strong> : <% out.println(utilisateur.getPrenom()); %></p>
+            <p><strong>Nom</strong> : <% out.println(utilisateur.getNom()); %></p>
+            <p><strong>Pseudo</strong> : <% out.println(utilisateur.getPseudo()); %></p>
         </div>
         <br /><br /><br />
         <div>
-            <h3> Vos commandes passées</h3>
-            <%
-                List<Commande> listeCommande = (List<Commande>) request.getAttribute("listeCommande");
-                for(Commande c : listeCommande){
-                    out.println("<p>" + c + "</p>");
-                }
-
-            %>
+            <h3> Votre historique de commande</h3>
+                <table border="1" cellpadding="2" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th> Id </th>
+                            <th> Date Commande </th>
+                            <th> Prix total TTC </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <%
+                        List<Commande> listeCommande = (List<Commande>) request.getAttribute("listeCommande");
+                        for(Commande c : listeCommande){
+                            out.println("<tr>" +
+                                        "<td>" + c.getId() + "</td>" +
+                                        "<td>" + c.getDate() + "</td>" +
+                                        "<td>" + String.format("%.2f", c.getPrix()) + "€</td>" +
+                                        "<td>" + "<a href='/detail?id=" + c.getId() + "'><button>Détail de la commande</button></a>" + "</td>" +
+                                        "</tr>");
+                        }
+                    %>
+                    </tbody>
         </div>
 </form>
 </body>

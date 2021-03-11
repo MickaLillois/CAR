@@ -26,14 +26,6 @@ public class ProduitController {
         this.repository = repository;
     }
 
-
-    /*@GetMapping("/produits/liste")
-    public String listerProduits(Model model) {
-        ArrayList<Produit> listeProduits = (ArrayList<Produit>) this.produitRepository.findAll();
-        model.addAttribute("listeProduitsHTML",listeProduits);
-        return "produitsListe";
-    }*/
-
     @RequestMapping(path = "/carte")
     public String listerProduitsDispos(Model model) {
         ArrayList<Produit> listeProduits = this.repository.findProduitsDispos();
@@ -87,16 +79,4 @@ public class ProduitController {
         }
         return "redirect:panier";
     }
-
-
-    /*@PostMapping("/produits/processNouveau")
-    public String processCreerProduit(@RequestParam("idprod") String idprod,
-                                          @RequestParam("nom") String nom,
-                                          @RequestParam("desc") String desc,
-                                          @RequestParam("prix") String prix,
-                                          @RequestParam("qteStock") String qteStock) {
-        Produit newProduit = new Produit(nom,desc,Float.parseFloat(prix),Integer.parseInt(qteStock));
-        this.repository.save(newProduit);
-        return "redirect:/produits/liste";
-    }*/
 }
