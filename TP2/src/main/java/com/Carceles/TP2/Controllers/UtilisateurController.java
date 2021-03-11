@@ -1,6 +1,8 @@
 package com.Carceles.TP2.Controllers;
 
+import com.Carceles.TP2.Models.Commande;
 import com.Carceles.TP2.Models.Utilisateur;
+import com.Carceles.TP2.Repositories.CommandeRepository;
 import com.Carceles.TP2.Repositories.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,11 +17,13 @@ import java.util.*;
 
 @Controller
 public class UtilisateurController {
-    private UtilisateurRepository repository;
+    private UtilisateurRepository utilisateurRepo;
+    private CommandeRepository commandeRepo;
 
     @Autowired
-    public UtilisateurController(UtilisateurRepository repository) {
-        this.repository = repository;
+    public UtilisateurController(UtilisateurRepository utilisateurRepo, CommandeRepository commandeRepo) {
+        this.utilisateurRepo = utilisateurRepo;
+        this.commandeRepo = commandeRepo;
     }
 
     @RequestMapping(path = "/utilisateurs")
@@ -32,7 +36,13 @@ public class UtilisateurController {
     public String deconnexion(){ return "deconnexion";}
 
     @RequestMapping(path = "/profil")
-    public String profil(){ return "profil";}
+    public String profil(HttpSession session, Model model){
+        Utilisateur utilisateur = utilisateurRepo.findById((Integer) session.getAttribute("idUtilisateur")).get();
+        List<Commande> listeCommande = commandeRepo.findByIdUtilisateur(utilisateur.getId());
+        model.addAttribute("utilisateur", utilisateur);
+        model.addAttribute("listeCommande", listeCommande);
+        return "profil";
+    }
 
     @RequestMapping(path = "/checkConnexion")
     public String checkConnexion(Model model, HttpSession session, @RequestParam(required = false) String mail, @RequestParam(required = false) String mdpForm){
@@ -42,11 +52,11 @@ public class UtilisateurController {
                 return "redirect:connexion?vide=true";
             }
             else{
-                if (repository.findByMail(mail).size() == 0){
+                if (utilisateurRepo.findByMail(mail).size() == 0){
                     return "redirect:connexion?existe=false";
                 }
-                else if(repository.findByMail(mail).get(0).getMdp().equals(mdpForm)){
-                    utilisateur = (Utilisateur) repository.findByMail(mail).get(0);
+                else if(utilisateurRepo.findByMail(mail).get(0).getMdp().equals(mdpForm)){
+                    utilisateur = (Utilisateur) utilisateurRepo.findByMail(mail).get(0);
                 }
                 else{
                     return "redirect:connexion?mdp=false";
@@ -55,9 +65,11 @@ public class UtilisateurController {
             }
         }
         else{
-            utilisateur = repository.findById((Integer) session.getAttribute("idUtilisateur")).get();
+            utilisateur = utilisateurRepo.findById((Integer) session.getAttribute("idUtilisateur")).get();
         }
+        List<Commande> listeCommande = commandeRepo.findByIdUtilisateur(utilisateur.getId());
         model.addAttribute("utilisateur", utilisateur);  //model ici = request dans jsp
+        model.addAttribute("listeCommande", listeCommande);
         return "profil";
     }
 

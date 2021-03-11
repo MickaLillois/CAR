@@ -37,7 +37,7 @@
         </div>
 </form>
 <br />
-<%
+        <%
             if(request.getParameter("vide") != null){
                 out.println("<div role='alert'>" +
                                 "Veuillez renseigner votre <strong>mot de passe ainsi que votre email</strong>." +

@@ -27,18 +27,21 @@
 <h2>Le panier</h2>
         <div>
                 <%
+                     Float total = 0.00F;
                      ProduitRepository repo = (ProduitRepository) request.getAttribute("repository");
                      HashMap<Integer, Integer> panier = (HashMap<Integer, Integer>) session.getAttribute("panier");
 
                      for(int id : panier.keySet()){
                         Produit leProd = repo.findById(id).get();
                         Integer qte = panier.get(id);
+                        total += qte * leProd.getPrix();
                         out.println("<div>" +
                                     "<p>" + leProd.getNom() + " : " + qte + "</p>" +
                                     "<a href=\"/retirer?id=" + leProd.getId() + "\"><button>Retirer du panier</button></a>"  +
                                     "</div>");
                      }
                 %>
+                <p>Total TTC : <% out.println(String.format("%.2f", total)); %>€</p>
         </div>
         <br /><br /><br />
         <a href="/commander"><button>Enregistrer la commande</button></a>

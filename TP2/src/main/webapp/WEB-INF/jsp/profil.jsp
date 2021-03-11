@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <title>La Taverne</title>
     <%@ page import="com.Carceles.TP2.Models.Utilisateur" %>
+    <%@ page import="com.Carceles.TP2.Models.Commande" %>
+    <%@ page import="java.util.List" %>
 </head>
 <header>
     <a href="/"><h1><strong>Bienvenue à La Taverne !</strong></h1></a>
@@ -28,6 +30,20 @@
             <h5>Nom : <% out.println(utilisateur.getNom()); %></h5>
             <h5>Pseudo : <% out.println(utilisateur.getPseudo()); %></h5>
         </div>
-</from>
+        <br /><br /><br />
+        <div>
+            <h3> Vos commandes passées</h3>
+            <%
+                List<Commande> listeCommande = (List<Commande>) request.getAttribute("listeCommande");
+                for(Commande c : listeCommande){
+                    out.println("<p>" + c.getId() + "</p>" +
+                                "<p>" + c.getIdUtilisateur() + "</p>" +
+                                "<p>" + c.getPrix() + "</p>" +
+                                "<p>" + c.getDate() + "</p>");
+                }
+
+            %>
+        </div>
+</form>
 </body>
 </html>
