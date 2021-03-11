@@ -11,8 +11,10 @@ import java.time.LocalDate;
 @IdClass(LignecommandeId.class)
 public class Lignecommande {
     @Id
+    @Column(name="IDCOMMANDE")
     private Integer idCommande;
     @Id
+    @Column(name="IDPRODUIT")
     private Integer idProduit;
     private Float prixunitaire;
     private Integer qte;

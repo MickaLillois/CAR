@@ -46,7 +46,7 @@
                                     "<td>" + leProd.getNom() + "</td>" +
                                     "<td>" + String.format("%.2f", lc.getPrixunitaire()) + "€</td>" +
                                     "<td>" + lc.getQte() + "</td>" +
-                                    "<td>" + (lc.getQte()*lc.getPrixunitaire()) + "</td>" +
+                                    "<td>" + String.format("%.2f",(lc.getQte()*lc.getPrixunitaire())) + "€</td>" +
                                     "</tr>");
                     }
                 %>
