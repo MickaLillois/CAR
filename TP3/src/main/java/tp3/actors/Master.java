@@ -1,7 +1,5 @@
 package tp3.actors;
 
-import akka.actor.ActorSystem;
-import akka.actor.Props;
 import akka.actor.UntypedActor;
 import tp3.Main;
 

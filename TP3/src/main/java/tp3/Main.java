@@ -41,10 +41,12 @@ public class Main {
             Scanner in = new Scanner(System.in);
             System.out.println(">>> Press ENTER to print occurences by word for each reducer <<<");
             System.in.read();
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             e.printStackTrace();
         }
+
         master.tell("AFFICHAGE_FINAL", ActorRef.noSender());
 
 

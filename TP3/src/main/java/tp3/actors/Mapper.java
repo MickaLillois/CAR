@@ -16,7 +16,6 @@ public class Mapper extends UntypedActor {
     public void onReceive(Object message) throws Exception {
         if(message instanceof String)
         {
-            //System.out.println("[" + getSelf().toString() + "] Ligne reçue : " + (String) message);
             this.partition((String) message);
         }
         else
@@ -32,9 +31,6 @@ public class Mapper extends UntypedActor {
 
         for (String word : lineSplitted) {
             getContext().actorSelection(Main.SYTEM_PATH + "/user/reducer" + Math.abs(word.hashCode() % Main.NB_REDUCERS)).tell(word,ActorRef.noSender());
-        }
-        for (int i=0; i < Main.NB_REDUCERS ; i++) {
-            getContext().actorSelection(Main.SYTEM_PATH + "/user/reducer" + i%Main.NB_REDUCERS).tell("AFFICHAGE_FINAL", ActorRef.noSender());
         }
     }
 

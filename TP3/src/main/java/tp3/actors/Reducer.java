@@ -15,13 +15,12 @@ public class Reducer extends UntypedActor {
         if (message instanceof String)
         {
             String word = (String) message;
-            if(word.equals("AFFICHAGE_FINAL")){
-                //System.out.println("ici zebi");
+            if(word.equals("AFFICHAGE_FINAL"))
+            {
                 this.affichage();
             }
             else
             {
-                //System.out.println("ici trou du cul");
                 if (!this.occurencesParMot.containsKey(word))
                 {
                     occurencesParMot.put(word, 1);
@@ -31,8 +30,6 @@ public class Reducer extends UntypedActor {
                     occurencesParMot.put(word, occurencesParMot.get(word) + 1);
                 }
             }
-
-            //System.out.println("[" + getSelf().toString() + "] Mot reçu : " + word + " --> " + occurencesParMot.get(word) + " occurences");
         }
         else{
             unhandled(message);
@@ -40,8 +37,11 @@ public class Reducer extends UntypedActor {
     }
 
     public void affichage(){
+        int nbWords = 0;
         for (Map.Entry<String, Integer> entry : occurencesParMot.entrySet()) {
             System.out.println(getSelf() + ": " + entry.getKey() + " -> " + entry.getValue());
+            nbWords += entry.getValue();
         }
+        System.out.println("[" + getSelf().toString() + "] Il y a " + occurencesParMot.size() + " mots différents et " + nbWords + " mots lus au total sur ce reducer");
     }
 }
