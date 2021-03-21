@@ -1,6 +1,9 @@
-package actors;
+package tp3.actors;
 
+import akka.actor.ActorSystem;
+import akka.actor.Props;
 import akka.actor.UntypedActor;
+import tp3.Main;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,6 +13,7 @@ public class Master extends UntypedActor { //job : distribuer les lignes
 
     public File fileToProcess;
 
+    @Override
     public void onReceive( Object message ) throws InterruptedException {
         if(message instanceof String)
         {
@@ -17,6 +21,7 @@ public class Master extends UntypedActor { //job : distribuer les lignes
         }
         else if (message instanceof File)
         {
+            System.out.println("[Master] Fichier reçu");
             fileToProcess = (File) message;
             this.sendLines();
         }
@@ -34,7 +39,8 @@ public class Master extends UntypedActor { //job : distribuer les lignes
         try (BufferedReader br = new BufferedReader(new FileReader(fileToProcess))) {
             String line;
             while ((line = br.readLine()) != null) {
-                //mapper1.tell(line.toUpperCase(), getSelf());
+                int num = (i%2)+1;
+                getContext().actorSelection(Main.SYTEM_PATH + "/user/mapper" + num).tell(line.toUpperCase() + " / Ligne " + (i+1), getSelf());
                 i++;
             }
         }

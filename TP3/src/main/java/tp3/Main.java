@@ -1,6 +1,8 @@
-import actors.Master;
-import actors.Mapper;
-import actors.Reducer;
+package tp3;
+
+import scala.concurrent.duration.Duration;
+import tp3.actors.Master;
+import tp3.actors.Mapper;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
@@ -8,8 +10,11 @@ import akka.actor.Props;
 import java.io.File;
 
 public class Main {
+
+    public static final String SYTEM_PATH = "akka://MainSystem";
+
     public static void main(String[] args) {
-        ActorSystem system = ActorSystem.create("MySystem");
+        ActorSystem system = ActorSystem.create("MainSystem");
         ActorRef master;
 
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
@@ -19,11 +24,9 @@ public class Main {
         system.actorOf(Props.create(Mapper.class), "mapper1");
         system.actorOf(Props.create(Mapper.class), "mapper2");
 
-        master.tell( "le message",ActorRef.noSender());
-        master.tell( new Object(),ActorRef.noSender());
-
         master.tell(new File(classloader.getResource("le_corbeau_et_le_renard.txt").getFile()), ActorRef.noSender());
 
+        system.awaitTermination();
         system.shutdown();
     }
 }
