@@ -17,7 +17,7 @@ public class Master extends UntypedActor { //job : distribuer les lignes
     public void onReceive( Object message ) throws InterruptedException {
         if(message instanceof String)
         {
-            System.out.println("string");
+            this.affichage();
         }
         else if (message instanceof File)
         {
@@ -32,6 +32,12 @@ public class Master extends UntypedActor { //job : distribuer les lignes
         }
     }
 
+    private void affichage() {
+        for (int i=0; i < Main.NB_REDUCERS; i++) {
+            getContext().actorSelection(Main.SYTEM_PATH + "/user/reducer" + i%Main.NB_REDUCERS).tell("AFFICHAGE_FINAL", getSelf());
+        }
+    }
+
     private void sendLines()
     {
         int i = 0;
@@ -39,10 +45,10 @@ public class Master extends UntypedActor { //job : distribuer les lignes
         try (BufferedReader br = new BufferedReader(new FileReader(fileToProcess))) {
             String line;
             while ((line = br.readLine()) != null) {
-                int num = (i%2)+1;
-                getContext().actorSelection(Main.SYTEM_PATH + "/user/mapper" + num).tell(line.toUpperCase() + " / Ligne " + (i+1), getSelf());
+                getContext().actorSelection(Main.SYTEM_PATH + "/user/mapper" + i%Main.NB_MAPPERS).tell(line.toUpperCase(), getSelf());
                 i++;
             }
+
         }
         catch (Exception e){
             e.printStackTrace();
