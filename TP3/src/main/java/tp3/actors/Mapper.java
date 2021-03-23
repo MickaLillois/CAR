@@ -30,13 +30,13 @@ public class Mapper extends UntypedActor {
         String[] lineSplitted = clearLine.split(" ");
 
         for (String word : lineSplitted) {
-            getContext().actorSelection(Main.SYTEM_PATH + "/user/reducer" + Math.abs(word.hashCode() % Main.NB_REDUCERS)).tell(word,ActorRef.noSender());
+            getContext().actorSelection(Main.MASTERSYSTEM_PATH + "/user/reducer" + Math.abs(word.hashCode() % Main.NB_REDUCERS)).tell(word,ActorRef.noSender());
         }
     }
 
     public static String cleanText(String text) {
         //stackoverflow
-        String result = text.replaceAll("[\"()\n,.!?;':]", " ");
+        String result = text.replaceAll("[\"()\n,.!?;':»«]", " ");
         result = result.trim();
         result = result.replaceAll("( )+", " ");
 

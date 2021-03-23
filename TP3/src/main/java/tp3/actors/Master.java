@@ -32,7 +32,7 @@ public class Master extends UntypedActor { //job : distribuer les lignes
 
     private void affichage() {
         for (int i=0; i < Main.NB_REDUCERS; i++) {
-            getContext().actorSelection(Main.SYTEM_PATH + "/user/reducer" + i%Main.NB_REDUCERS).tell("AFFICHAGE_FINAL", getSelf());
+            getContext().actorSelection(Main.MASTERSYSTEM_PATH + "/user/reducer" + i%Main.NB_REDUCERS).tell("AFFICHAGE_FINAL", getSelf());
         }
     }
 
@@ -40,15 +40,17 @@ public class Master extends UntypedActor { //job : distribuer les lignes
     {
         int i = 0;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(fileToProcess))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fileToProcess)))
+        {
             String line;
             while ((line = br.readLine()) != null) {
-                getContext().actorSelection(Main.SYTEM_PATH + "/user/mapper" + i%Main.NB_MAPPERS).tell(line.toUpperCase(), getSelf());
+                getContext().actorSelection(Main.MAPPERSYSTEM_PATH + "/user/mapper" + i%Main.NB_MAPPERS).tell(line.toUpperCase(), getSelf());
                 i++;
             }
 
         }
-        catch (Exception e){
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
